@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="debb3a4a-e103-434b-b276-c03d04b6f729" name="startcode@localhost Mapping">
+      <data-sources db="c161855d-98e5-4237-bca5-04ac2b3b6615" />
+      <scope>
+        <node kind="schema" qname="startcode" />
+      </scope>
+    </mapping>
+  </component>
+</project>
