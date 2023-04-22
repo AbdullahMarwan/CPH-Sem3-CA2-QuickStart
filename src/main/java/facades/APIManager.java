@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class APIManager {
     public static void jokesAPI() throws Exception {
@@ -39,8 +40,9 @@ public class APIManager {
         responseFuture.join();
         client.close();
     }
-    public static void factAPI() throws Exception {
+    public AtomicReference<String> factAPI() throws Exception {
 
+        AtomicReference<String> facttext = new AtomicReference<>("");
         AsyncHttpClient client = new DefaultAsyncHttpClient();
         //YOUR API URL
         String url = "https://fun-facts1.p.rapidapi.com/api/fun-facts";
@@ -62,9 +64,10 @@ public class APIManager {
 
                 JSONObject jsonResponse = new JSONObject(response.getResponseBody());
 
-                String facttext = jsonResponse.getString("fact");
+                 facttext.set(jsonResponse.getString("fact"));
 
                 System.out.println("Fact: " + facttext);
+
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -73,13 +76,12 @@ public class APIManager {
 
         responseFuture.join();
         client.close();
-
+    return facttext;
     }
     public static void allAPI(){
         try {
             //APIFunctions
             jokesAPI();
-            factAPI();
         } catch (Exception e) {
             e.printStackTrace();
         }
