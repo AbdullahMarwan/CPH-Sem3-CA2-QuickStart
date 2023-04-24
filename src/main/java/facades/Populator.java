@@ -6,24 +6,8 @@ package facades;
  * and open the template in the editor.
  */
 
-import facades.APIManager;
-import org.asynchttpclient.*;
-
 //import com.nimbusds.jose.shaded.json.JSONObject;
-import dtos.RenameMeDTO;
-import entities.RenameMe;
-import javax.persistence.EntityManagerFactory;
 
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.DefaultAsyncHttpClient;
-import org.asynchttpclient.RequestBuilder;
-import org.json.JSONArray;
-import org.json.JSONException;
-import utils.EMF_Creator;
-
-import org.json.JSONObject;
-
-import java.util.concurrent.CompletableFuture;
 
 /**
  *
@@ -67,6 +51,7 @@ public class Populator {
     }
 }*/
     public static void main(String[] args) throws Exception {
-        APIManager.allAPI();
+        ExternalApiFacade.allAPI();
+
     }
 }
