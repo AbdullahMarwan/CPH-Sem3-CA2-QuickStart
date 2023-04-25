@@ -1,8 +1,5 @@
 package dtos;
 
-import entities.User;
-import entities.User;
-
 import java.util.List;
 import java.util.stream.Collectors;
 

@@ -5,7 +5,6 @@
  */
 package dtos;
 
-import entities.RenameMe;
 import java.util.ArrayList;
 import java.util.List;
 

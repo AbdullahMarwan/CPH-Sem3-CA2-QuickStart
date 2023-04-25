@@ -1,56 +1,38 @@
 package entities;
 
-import java.io.Serializable;
-import java.util.List;
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-/**
- *
- * @author Plaul
- */
 @Entity
 @Table(name = "roles")
-public class Role implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Role {
     @Id
-    @Basic(optional = false)
-    @NotNull
-    @Column(name = "role_name", length = 20)
-    private String roleName;
-    
-    @ManyToMany(mappedBy = "roleList")
-    private List<User> userList;
+    @Size(max = 20)
+    @Column(name = "role_name", nullable = false, length = 20)
+    private String id;
 
-    public Role() {
+    @ManyToMany
+    @JoinTable(name = "user_roles",
+            joinColumns = @JoinColumn(name = "role_name"),
+            inverseJoinColumns = @JoinColumn(name = "user_name"))
+    private Set<User> users = new LinkedHashSet<>();
+
+    public String getId() {
+        return id;
     }
 
-    public Role(String roleName) {
-        this.roleName = roleName;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getRoleName() {
-        return roleName;
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
-    public List<User> getUserList() {
-        return userList;
-    }
-
-    public void setUserList(List<User> userList) {
-        this.userList = userList;
-    }   
 }

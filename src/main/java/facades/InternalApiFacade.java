@@ -1,19 +1,13 @@
 package facades;
 
-import entities.User;
-
 import javax.persistence.EntityManager;
 
 import dtos.QuoteDTO;
 import dtos.UserDTO;
 
-import entities.Quote;
-import entities.User;
-
 
 import utils.EMF_Creator;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import java.util.List;

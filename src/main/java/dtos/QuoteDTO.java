@@ -1,7 +1,6 @@
 package dtos;
 
 import entities.Person;
-import entities.Quote;
 
 import java.util.List;
 import java.util.stream.Collectors;
