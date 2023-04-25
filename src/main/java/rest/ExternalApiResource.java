@@ -2,6 +2,8 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dtos.QuoteDTO;
+import dtos.UserDTO;
 import facades.ExternalApiFacade;
 import utils.EMF_Creator;
 

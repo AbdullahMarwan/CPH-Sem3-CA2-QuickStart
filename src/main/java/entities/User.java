@@ -25,19 +25,22 @@ public class User implements Serializable {
   @Column(name = "user_pass")
   private String userPass;
 
+  @Column(name = "age")
+  private int age;
+
   @JoinTable(name = "user_roles", joinColumns = {
-    @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
-    @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
+          @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+          @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
   @ManyToMany
   private List<Role> roleList = new ArrayList<>();
 
+
   @ManyToMany
   @JoinTable(
-          name = "User_Facts",
-            joinColumns = @JoinColumn(name = "user_name", referencedColumnName = "user_name"),
-            inverseJoinColumns = @JoinColumn(name = "fact", referencedColumnName = "fact"))
-  private List<Facts> userFacts;
-
+          name="User_Quote",
+          joinColumns=@JoinColumn(name="user_name", referencedColumnName="user_name"),
+          inverseJoinColumns=@JoinColumn(name="Quote_id", referencedColumnName="id"))
+  private List<Quote> quotes;
 
   public List<String> getRolesAsStrings() {
     if (roleList.isEmpty()) {
@@ -45,23 +48,26 @@ public class User implements Serializable {
     }
     List<String> rolesAsStrings = new ArrayList<>();
     roleList.forEach((role) -> {
-        rolesAsStrings.add(role.getRoleName());
-      });
+      rolesAsStrings.add(role.getRoleName());
+    });
     return rolesAsStrings;
   }
 
   public User() {}
 
   //TODO Change when password is hashed
-   public boolean verifyPassword(String pw){
+  public boolean verifyPassword(String pw){
     return BCrypt.checkpw(pw, userPass);
-    }
+  }
 
   public User(String userName, String userPass) {
     this.userName = userName;
     this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
   }
 
+  public void setQuotes(List<Quote> quotes) {
+    this.quotes = quotes;
+  }
 
   public String getUserName() {
     return userName;
@@ -91,4 +97,36 @@ public class User implements Serializable {
     roleList.add(userRole);
   }
 
+  public int getAge() {
+    return age;
+  }
+
+  public void setAge(int age) {
+    this.age = age;
+  }
+
+  public List<Quote> getQuotes() {
+    return quotes;
+  }
+
+  public void addQuote(Quote quote) {
+    this.quotes.add(quote);
+    quote.addUser(this);
+  }
+
+  public void removeQuote(Quote quote) {
+    this.quotes.remove(quote);
+    quote.removeUser(this);
+  }
+
+  @Override
+  public String toString() {
+    return "User{" +
+            "userName='" + userName + '\'' +
+            ", userPass='" + userPass + '\'' +
+            ", age=" + age +
+            ", roleList=" + roleList +
+            ", quotes=" + quotes +
+            '}';
+  }
 }
