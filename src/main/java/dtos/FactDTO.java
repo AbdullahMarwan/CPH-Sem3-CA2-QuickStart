@@ -1,28 +1,38 @@
 package dtos;
 
-import java.util.ArrayList;
+import entities.Fact;
+import entities.User;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class FactDTO    {
+    private int id;
     private String fact;
-    private List<String> users;
+    private User user;
 
 
-    public FactDTO(Facts fact) {
-        this.fact = fact.getFact();
-        if(fact.getUsers() != null){
-            this.users = new ArrayList<>();
-            fact.getUsers().forEach(user->this.users.add(user.getUserName()));
-        }
+    public FactDTO(Fact f) {
+        this.id = f.getId();
+        this.fact = f.getFact();
+        this.user = f.getUserName();
+
     }
 
     public FactDTO(String fact) {
         this.fact = fact;
     }
 
-    public static List<FactDTO> getDtos(List<Facts> facts){
+    public static List<FactDTO> getDtos(List<Fact> facts){
         return facts.stream().map(fact -> new FactDTO(fact)).collect(Collectors.toList());
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getFact() {
@@ -33,19 +43,20 @@ public class FactDTO    {
         this.fact = fact;
     }
 
-    public List<String> getUsers() {
-        return users;
+    public User getUser() {
+        return user;
     }
 
-    public void setUsers(List<String> users) {
-        this.users = users;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
     public String toString() {
         return "FactDTO{" +
-                "fact='" + fact + '\'' +
-                ", users=" + users +
+                "id=" + id +
+                ", fact='" + fact + '\'' +
+                ", user=" + user +
                 '}';
     }
 }

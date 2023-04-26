@@ -1,50 +1,72 @@
 package entities;
 
-import dtos.QuoteDTO;
+
+import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
-public class User {
+@NamedQuery(name = "User.deleteAllRows", query = "DELETE from User")
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Size(max = 25)
     @Column(name = "user_name", nullable = false, length = 25)
-    private String id;
+    private String userName;
 
     @Size(max = 255)
     @Column(name = "user_pass")
     private String userPass;
 
-    @OneToMany(mappedBy = "userName")
-    private Set<Quote> quotes = new LinkedHashSet<>();
-
+    @JoinTable(name = "user_roles", joinColumns = {
+            @JoinColumn(name = "user_name", referencedColumnName = "user_name")}, inverseJoinColumns = {
+            @JoinColumn(name = "role_name", referencedColumnName = "role_name")})
     @ManyToMany
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_name"),
-            inverseJoinColumns = @JoinColumn(name = "role_name"))
-    private Set<Role> roles = new LinkedHashSet<>();
+    private List<Role> roleList = new ArrayList<>();
+
 
     @OneToMany(mappedBy = "userName")
-    private Set<Fact> facts = new LinkedHashSet<>();
+    private List<Fact> facts = new ArrayList<>();
 
-    public Set<QuoteDTO> getQuotesDTO(Set<Quote> quoteList) {
-        Set<QuoteDTO> quoteDTOList = new LinkedHashSet<>();
-        for (Quote quote : quoteList) {
-            quoteDTOList.add(new QuoteDTO(quote));
+    @OneToMany(mappedBy = "userName")
+    private List<Quote> quotes = new ArrayList<>();
+
+    public List<String> getRolesAsStrings() {
+        if (roleList.isEmpty()) {
+            return null;
         }
-        return quoteDTOList;
+        List<String> rolesAsStrings = new ArrayList<>();
+        roleList.forEach((role) -> {
+            rolesAsStrings.add(role.getRoleName());
+        });
+        return rolesAsStrings;
     }
 
-    public String getId() {
-        return id;
+
+    public User() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Boolean verifyPassword(String pw) {
+        return BCrypt.checkpw(pw, userPass);
+    }
+
+    public User(String userName, String userPass) {
+        this.userName = userName;
+        this.userPass = BCrypt.hashpw(userPass, BCrypt.gensalt());
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUserPass() {
@@ -55,28 +77,60 @@ public class User {
         this.userPass = userPass;
     }
 
-    public Set<Quote> getQuotes() {
-        return quotes;
+    public List<Role> getRoleList() {
+        return roleList;
     }
 
-    public void setQuotes(Set<Quote> quotes) {
-        this.quotes = quotes;
+    public void setRoleList(List<Role> roleList) {
+        this.roleList = roleList;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
+    public void addRole(Role role) {
+        this.roleList.add(role);
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public Set<Fact> getFacts() {
+    public List<Fact> getFacts() {
         return facts;
     }
 
-    public void setFacts(Set<Fact> facts) {
+    public void setFacts(List<Fact> facts) {
         this.facts = facts;
+    }
+
+    public List<Quote> getQuotes() {
+        return quotes;
+    }
+
+    public void setQuotes(List<Quote> quotes) {
+        this.quotes = quotes;
+    }
+
+    public void addQuote(Quote quote) {
+        this.quotes.add(quote);
+    }
+
+    public void removeQuote(Quote quote) {
+        this.quotes.remove(quote);
+
+    }
+
+    public void addFact(Fact fact) {
+        this.facts.add(fact);
+    }
+
+    public void removeFact(Fact fact) {
+        this.facts.remove(fact);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userName='" + userName + '\'' +
+                ", userPass='" + userPass + '\'' +
+                ", roleList=" + roleList +
+                ", facts=" + facts +
+                ", quotes=" + quotes +
+                '}';
     }
 
 }

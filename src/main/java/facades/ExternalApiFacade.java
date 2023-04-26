@@ -1,22 +1,21 @@
 package facades;
 
 import com.google.gson.Gson;
-import io.netty.handler.codec.http.HttpRequest;
-import org.asynchttpclient.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.gson.GsonBuilder;
+import dtos.FactDTO;
+import dtos.QuoteDTO;
 
+
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.atomic.AtomicReference;
+import java.net.http.HttpRequest;
 
 public class ExternalApiFacade {
 
-    private static Gson GSON = new Gson();
+    private static Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private static ExternalApiFacade instance;
     private static EntityManagerFactory emf;
 
@@ -30,106 +29,119 @@ public class ExternalApiFacade {
         return instance;
     }
 
-    public static void jokesAPI() throws Exception {
-
-        AsyncHttpClient client = new DefaultAsyncHttpClient();
-        String url = "https://dad-jokes.p.rapidapi.com/random/joke";
-        Request request = new RequestBuilder()
-                .setMethod("GET")
-                .setUrl(url)
-                .addHeader("X-RapidAPI-Key", "73d1a7f55cmshd7234873c5eaf06p107fa6jsnea4135418dd7")
-                .addHeader("X-RapidAPI-Host", "dad-jokes.p.rapidapi.com")
-                .build();
-
-        CompletableFuture<Response> responseFuture = client.executeRequest(request)
-                .toCompletableFuture();
-
-        responseFuture.thenAccept(response -> {
-            try {
-                JSONObject jsonResponse = new JSONObject(response.getResponseBody());
-                JSONArray jokesArray = jsonResponse.getJSONArray("body");
-                JSONObject joke = jokesArray.getJSONObject(0);
-                String setup = joke.getString("setup");
-                String punchline = joke.getString("punchline");
-                System.out.println("Setup: " + setup);
-                System.out.println("Punchline: " + punchline);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        responseFuture.join();
-        client.close();
-    }
-    public AtomicReference<String> factAPI() throws Exception {
-
-        AtomicReference<String> facttext = new AtomicReference<>("");
-        AsyncHttpClient client = new DefaultAsyncHttpClient();
-        //YOUR API URL
-        String url = "https://fun-facts1.p.rapidapi.com/api/fun-facts";
-        Request request = new RequestBuilder()
-                .setMethod("GET")
-                .setUrl(url)
-                //Your headerkeys from RapidAPI
-                .addHeader("X-RapidAPI-Key", "73d1a7f55cmshd7234873c5eaf06p107fa6jsnea4135418dd7")
-                .addHeader("X-RapidAPI-Host", "fun-facts1.p.rapidapi.com")
-                .build();
-
-        CompletableFuture<Response> responseFuture = client.executeRequest(request)
-                .toCompletableFuture();
-
-        responseFuture.thenAccept(response ->
-
-        {
-            try {
-
-                JSONObject jsonResponse = new JSONObject(response.getResponseBody());
-
-                facttext.set(jsonResponse.getString("fact"));
-
-                System.out.println("Fact: " + facttext);
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
-
-        responseFuture.join();
-        client.close();
-    return facttext;
+    private EntityManager getEntityManager() {
+        return emf.createEntityManager();
     }
 
-    public String getKanyeQuote(String url) throws Exception {
+
+    public String getQuote(String url) throws Exception{
         var client = HttpClient.newHttpClient();
         var request = HttpRequest
                 .newBuilder(URI.create(url))
                 .header("accept", "application/json")
                 .build();
         var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        System.out.print(response.body());
-        KanyeDTO gson = new Gson().fromJson(response.body(), KanyeDTO.class);
-        System.out.print(gsonString);
+        System.out.println(response.body());
+        QuoteDTO gsonString = gson.fromJson(response.body(), QuoteDTO.class);
+        System.out.println(gsonString.getQuote());
 
-        return gson.getQuote();
+        return gsonString.toString();
+
     }
 
+    public String getFact(String url) throws Exception{
+        var client = HttpClient.newHttpClient();
+        var request = HttpRequest
+                .newBuilder(URI.create(url))
+                .header("accept", "application/json")
+                .build();
+        var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+        FactDTO gsonString = gson.fromJson(response.body(), FactDTO.class);
+        System.out.println(gsonString.getFact());
 
-    public static void main(String[] args) throws Exception {
+        return gsonString.toString();
+    }
+
+//    public static void jokesAPI() throws Exception {
+//
+//        AsyncHttpClient client = new DefaultAsyncHttpClient();
+//        String url = "https://dad-jokes.p.rapidapi.com/random/joke";
+//        Request request = new RequestBuilder()
+//                .setMethod("GET")
+//                .setUrl(url)
+//                .addHeader("X-RapidAPI-Key", "73d1a7f55cmshd7234873c5eaf06p107fa6jsnea4135418dd7")
+//                .addHeader("X-RapidAPI-Host", "dad-jokes.p.rapidapi.com")
+//                .build();
+//
+//        CompletableFuture<Response> responseFuture = client.executeRequest(request)
+//                .toCompletableFuture();
+//
+//        responseFuture.thenAccept(response -> {
+//            try {
+//                JSONObject jsonResponse = new JSONObject(response.getResponseBody());
+//                JSONArray jokesArray = jsonResponse.getJSONArray("body");
+//                JSONObject joke = jokesArray.getJSONObject(0);
+//                String setup = joke.getString("setup");
+//                String punchline = joke.getString("punchline");
+//                System.out.println("Setup: " + setup);
+//                System.out.println("Punchline: " + punchline);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        responseFuture.join();
+//        client.close();
+//    }
+//    public AtomicReference<String> factAPI() throws Exception {
+//
+//        AtomicReference<String> facttext = new AtomicReference<>("");
+//        AsyncHttpClient client = new DefaultAsyncHttpClient();
+//        //YOUR API URL
+//        String url = "https://fun-facts1.p.rapidapi.com/api/fun-facts";
+//        Request request = new RequestBuilder()
+//                .setMethod("GET")
+//                .setUrl(url)
+//                //Your headerkeys from RapidAPI
+//                .addHeader("X-RapidAPI-Key", "73d1a7f55cmshd7234873c5eaf06p107fa6jsnea4135418dd7")
+//                .addHeader("X-RapidAPI-Host", "fun-facts1.p.rapidapi.com")
+//                .build();
+//
+//        CompletableFuture<Response> responseFuture = client.executeRequest(request)
+//                .toCompletableFuture();
+//
+//        responseFuture.thenAccept(response ->
+//
+//        {
+//            try {
+//
+//                JSONObject jsonResponse = new JSONObject(response.getResponseBody());
+//
+//                facttext.set(jsonResponse.getString("fact"));
+//
+//                System.out.println("Fact: " + facttext);
+//
+//
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        responseFuture.join();
+//        client.close();
+//    return facttext;
+//    }
+
+
+    public static void main(String[] args) throws Exception{
         ExternalApiFacade facade = new ExternalApiFacade();
         try {
-            facade.getKanyeQuote("https://api.kanye.rest");
+            facade.getQuote("https://api.kanye.rest");
+            facade.getFact("https://uselessfacts.jsph.pl/random.json?language=en");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public static void allAPI(){
-        try {
-            //APIFunctions
-            jokesAPI();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

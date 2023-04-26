@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="devops-starter" />
+        <module name="ca2" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -15,6 +16,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ca2" options="-endorseddirs C:\Users\chris\IdeaProjects\CPH-Sem3-CA2-QuickStart-Backend\target/endorsed" />
       <module name="devops-starter" options="-endorseddirs C:\Users\chris\IdeaProjects\CPH-Sem3-CA2-QuickStart-Backend\target/endorsed" />
     </option>
   </component>

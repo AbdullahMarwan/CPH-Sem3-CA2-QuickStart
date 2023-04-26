@@ -2,37 +2,47 @@ package entities;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "roles")
-public class Role {
+public class Role implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Id
     @Size(max = 20)
     @Column(name = "role_name", nullable = false, length = 20)
-    private String id;
+    private String roleName;
 
     @ManyToMany
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "role_name"),
             inverseJoinColumns = @JoinColumn(name = "user_name"))
-    private Set<User> users = new LinkedHashSet<>();
+    private List<User> userList;
 
-    public String getId() {
-        return id;
+    public Role() {
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public Role(String roleName) {
+        this.roleName = roleName;
     }
 
-    public Set<User> getUsers() {
-        return users;
+    public String getRoleName() {
+        return roleName;
     }
 
-    public void setUsers(Set<User> users) {
-        this.users = users;
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
 }

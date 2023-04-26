@@ -1,6 +1,9 @@
 package utils;
 
 
+import entities.Role;
+import entities.User;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 

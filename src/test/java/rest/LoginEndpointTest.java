@@ -1,5 +1,7 @@
 package rest;
 
+import entities.Role;
+import entities.User;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
 import io.restassured.http.ContentType;

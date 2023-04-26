@@ -3,30 +3,39 @@ package entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "quotes")
-public class Quote {
+public class Quote implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private Integer id;
+    private int id;
 
     @Size(max = 225)
     @NotNull
     @Column(name = "quote", nullable = false, length = 225)
     private String quote;
 
+    @Size(max = 25)
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_name", nullable = false)
     private User userName;
 
-    public Integer getId() {
+    public Quote() {}
+
+    public Quote(String quote) {
+        this.quote = quote;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -45,5 +54,15 @@ public class Quote {
     public void setUserName(User userName) {
         this.userName = userName;
     }
+
+    @Override
+    public String toString() {
+        return "Quote{" +
+                "id=" + id +
+                ", quote='" + quote + '\'' +
+                ", userName=" + userName +
+                '}';
+    }
+
 
 }

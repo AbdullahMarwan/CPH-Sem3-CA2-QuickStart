@@ -3,6 +3,7 @@ package facades;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
+import entities.User;
 import security.errorhandling.AuthenticationException;
 
 /**

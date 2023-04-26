@@ -51,7 +51,7 @@ public class Populator {
     }
 }*/
     public static void main(String[] args) throws Exception {
-        ExternalApiFacade.allAPI();
+//        ExternalApiFacade.allAPI();
 
     }
 }
