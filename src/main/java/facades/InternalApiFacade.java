@@ -6,6 +6,7 @@ import dtos.QuoteDTO;
 import dtos.UserDTO;
 
 
+import entities.Quote;
 import utils.EMF_Creator;
 
 import javax.persistence.EntityManagerFactory;
@@ -100,7 +101,7 @@ import java.util.List;
         public UserDTO addQuote(String username, Long QuoteId){
             EntityManager em = getEntityManager();
             User u = em.find(User.class, username);
-            Quote q = em.find(Quote.class, QuoteId);
+            UserQuote q = em.find(UserQuote.class, QuoteId);
             if(u == null || q == null)
                 throw new IllegalArgumentException("user or Quote not found");
             u.addQuote(q);
@@ -121,8 +122,6 @@ import java.util.List;
             List<Quote> quotes = query.getResultList();
             return QuoteDTO.getDtos(quotes);
         }
-
-
 
         public static void main(String[] args) {
             emf = EMF_Creator.createEntityManagerFactory();
