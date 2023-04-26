@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="devops-starter" target="1.8" />
+      <module name="devops-starter" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
